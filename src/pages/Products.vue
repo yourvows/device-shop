@@ -17,7 +17,7 @@ configure({
 const dialogVisible = ref(false);
 const products = ref<Product[]>([]);
 const filter = ref({title: '', categories: [] as string[]});
-const selectedCategory = ref<string | null>(null);
+const selectedCategory = ref<string>();
 const filteredProducts = ref<Product[]>([]);
 const form = ref<{ [key: string]: any }>({})
 const formFields = ref([
