@@ -5,7 +5,8 @@ import {useRouter} from "vue-router";
 const router = useRouter();
 
 onMounted(() => {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const userItem = localStorage.getItem('user');
+  const user = userItem ? JSON.parse(userItem) : null;
   if (user) {
     router.push({name: 'Products'});
   } else {
