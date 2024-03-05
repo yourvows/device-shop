@@ -20,17 +20,22 @@ export function useProduct() {
     return `${month}-${year}`
   }
 
-  function addProduct(item: IProductForm) {
-    const product = {
-      ...item,
-      id: faker.string.uuid(),
-      photo: faker.image.url(),
-      is_hidden: false,
+  function addProduct(item: IProductForm | IProduct, type: string = 'add') {
+    if (type === 'add') {
+      const product = {
+        ...item,
+        id: faker.string.uuid(),
+        photo: faker.image.url(),
+        is_hidden: false,
+      }
+      products.value.unshift(product)
+    } else {
+      const index = products.value.findIndex((product) => product.id === item.id)
+      products.value[index] = item
     }
-    products.value.unshift(product)
   }
 
-  function createProduct(range: number = 10) {
+  function createProduct(range: number = 20) {
     for (let i = 0; i < range; i++) {
       const product = {
         id: faker.string.uuid(),

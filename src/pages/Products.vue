@@ -17,6 +17,7 @@
 
   const { products, productFormFields, addProduct, createProduct } = useProduct()
   const dialogVisible = ref(false)
+  const dialogType = ref<'add' | 'edit'>('add')
 
   const filter = ref({ title: '', categories: [] as string[] })
   const selectedCategory = ref<string[]>([])
@@ -30,10 +31,11 @@
     added_date: '',
   })
 
-  function editProduct(id: IProduct['id']) {
-    const product = products.value.find((product) => product.id === id)
+  function editProduct(item: IProduct) {
+    const product = products.value.find((product) => product.id === item.id)
     if (product) {
-      form.value = JSON.parse(JSON.stringify(product)) // create a deep copy of the product
+      dialogType.value = 'edit'
+      form.value = JSON.parse(JSON.stringify(product))
       dialogVisible.value = true
     }
   }
@@ -53,20 +55,20 @@
     }, 300),
   )
   watch(
-  () => selectedCategory.value,
-  (newVal: string[]) => {
-    if (!newVal.length) {
-      filteredProducts.value = products.value;
-    } else {
-      filteredProducts.value = products.value.filter((product) =>
-        newVal.includes(product.category)
-      );
-    }
-  }
-);
+    () => selectedCategory.value,
+    (newVal: string[]) => {
+      if (!newVal.length) {
+        filteredProducts.value = products.value
+      } else {
+        filteredProducts.value = products.value.filter((product) =>
+          newVal.includes(product.category),
+        )
+      }
+    },
+  )
 
   onMounted(() => {
-    createProduct()
+    createProduct(20)
     filteredProducts.value = products.value
     filter.value.categories = products.value
       .map((product) => product.category)
@@ -75,12 +77,12 @@
 </script>
 
 <template>
-  <div class="p-10">
-    <div class="flex justify-between py-3">
+  <div class="p-10 space-y-3">
+    <div class="flex justify-between">
       <div class="flex justify-center space-x-1">
-        <el-input v-model="filter.title" placeholder="Search" class="w-48" />
+        <el-input v-model="filter.title" placeholder="Name" class="w-48" />
         <el-select multiple clearable v-model="selectedCategory" placeholder="Categories">
-          <el-option v-for="item in filter.categories" :key="item" :label="item" :value="item"/>
+          <el-option v-for="item in filter.categories" :key="item" :label="item" :value="item" />
         </el-select>
       </div>
       <div>
@@ -91,14 +93,19 @@
       <Product
         v-for="product in filteredProducts"
         :key="product.id"
-        @editProduct="editProduct($event)"
-        @hide-product="hideProduct($event)"
+        @editProduct="editProduct"
+        @hide-product="hideProduct"
         :product
       />
     </div>
   </div>
   <teleport to="body">
-    <el-dialog class="!w-[32rem]" title="Add product" v-model="dialogVisible">
+    <el-dialog
+      class="!w-[32rem]"
+      title="Add product"
+      @close="dialogType = 'add'"
+      v-model="dialogVisible"
+    >
       <Form class="space-y-3" v-slot="{ errors }">
         <Field
           v-for="field in productFormFields"
@@ -116,13 +123,17 @@
             />
           </template>
           <template v-else>
-            <el-input :placeholder="field.label" v-model="form[field.name]" />
+            <el-input
+              :type="field.name === 'price' ? 'number' : 'text'"
+              :placeholder="field.label"
+              v-model="form[field.name]"
+            />
           </template>
           <span class="text-red-600">{{ errors[field.name] }}</span>
         </Field>
       </Form>
       <template #footer>
-        <el-button @click="addProduct(form)">Add</el-button>
+        <el-button @click="addProduct(form, dialogType)">Add</el-button>
       </template>
     </el-dialog>
   </teleport>

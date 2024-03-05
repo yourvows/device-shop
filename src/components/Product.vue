@@ -2,13 +2,13 @@
   defineProps<{ product: IProduct }>()
   const emits = defineEmits<{
     (e: 'hideProduct', id: IProduct['id']): void
-    (e: 'editProduct', id: IProduct['id']): void
+    (e: 'editProduct', id: IProduct): void
   }>()
 
   const user = JSON.parse(localStorage.getItem('user') || '{}')
 
-  function editProduct(id: IProduct['id']) {
-    emits('editProduct', id)
+  function editProduct(product: IProduct) {
+    emits('editProduct', product)
   }
 
   function hideProduct(id: IProduct['id']) {
@@ -22,7 +22,7 @@
     <template #footer>
       <div class="text-lg font-bold">{{ product.name }}</div>
       <div>Model: {{ product.model }}</div>
-      <div>Category: {{ product.category }}</div>
+      <div class="bg-black w-fit rounded-full px-1 text-white">{{ product.category }}</div>
       <div>Year of production: {{ product.year_of_production }}</div>
       <div class="truncate">Added at: {{ product.added_date }}</div>
       <div>
@@ -37,7 +37,7 @@
       </button>
       <button
         v-else
-        @click="editProduct(product.id)"
+        @click="editProduct(product)"
         class="absolute top-6 right-6 bg-transparent hover:bg-black transition-all duration-200 ease-in-out p-1 rounded-md text-white bg-black"
       >
         Edit
