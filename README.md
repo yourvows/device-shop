@@ -6,4 +6,4 @@ Login and password: admin
 
 Login and password: user
 
-[demo](https://device-shop-manager.netlify.app/login)
+[demo](https://device-shop-manager.netlify.app)
