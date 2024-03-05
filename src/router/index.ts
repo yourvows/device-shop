@@ -1,16 +1,16 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../pages/Login.vue')
+    component: () => import('../pages/Login.vue'),
   },
   {
     path: '/products',
     name: 'Products',
-    component: () => import('../pages/Products.vue')
-  }
+    component: () => import('../pages/Products.vue'),
+  },
 ]
 
 const router = createRouter({
