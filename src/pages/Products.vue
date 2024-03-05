@@ -131,10 +131,14 @@
           </template>
           <span class="text-red-600">{{ errors[field.name] }}</span>
         </Field>
+        <el-button
+          @click="
+            addProduct(form, dialogType)
+            dialogVisible = false
+          "
+          >Add</el-button
+        >
       </Form>
-      <template #footer>
-        <el-button @click="addProduct(form, dialogType)">Add</el-button>
-      </template>
     </el-dialog>
   </teleport>
 </template>

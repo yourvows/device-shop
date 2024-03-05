@@ -30,8 +30,8 @@ export function useProduct() {
       }
       products.value.unshift(product)
     } else {
-      const index = products.value.findIndex((product) => product.id === item.id)
-      products.value[index] = item
+      const index = products.value.findIndex((product) => product.id === (item as IProduct).id)
+      products.value[index] = item as IProduct
     }
   }
 
