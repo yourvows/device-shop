@@ -5,6 +5,13 @@ type IProductForm = Omit<IProduct, 'id' | 'photo' | 'is_hidden'>
 
 export function useProduct() {
   const products = ref<IProduct[]>([])
+  const productFormFields = [
+    { name: 'name', rules: 'required', label: 'Name' },
+    { name: 'model', rules: 'required', label: 'Model' },
+    { name: 'category', rules: 'required', label: 'Category' },
+    { name: 'year_of_production', rules: 'required|min:4', label: 'Year of production' },
+    { name: 'price', rules: 'required|min:1', label: 'Price' },
+  ]
 
   function getRandomDate(start: Date, end: Date) {
     const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
@@ -42,6 +49,7 @@ export function useProduct() {
 
   return {
     products,
+    productFormFields,
     addProduct,
     createProduct,
   }

@@ -15,11 +15,11 @@
     generateMessage: (context) => `The field ${context.field} is ${context?.rule?.name}`,
   })
 
-  const { products, addProduct, createProduct } = useProduct()
+  const { products, productFormFields, addProduct, createProduct } = useProduct()
   const dialogVisible = ref(false)
 
   const filter = ref({ title: '', categories: [] as string[] })
-  const selectedCategory = ref<string>()
+  const selectedCategory = ref<string[]>([])
   const filteredProducts = ref<IProduct[]>([])
   const form = ref<IProductForm>({
     name: '',
@@ -29,13 +29,6 @@
     category: '',
     added_date: '',
   })
-  const formFields = ref([
-    { name: 'name', rules: 'required', label: 'Name' },
-    { name: 'model', rules: 'required', label: 'Model' },
-    { name: 'category', rules: 'required', label: 'Category' },
-    { name: 'year_of_production', rules: 'required|min:4', label: 'Year of production' },
-    { name: 'price', rules: 'required|min:1', label: 'Price' },
-  ])
 
   function editProduct(id: IProduct['id']) {
     const product = products.value.find((product) => product.id === id)
@@ -59,6 +52,18 @@
       )
     }, 300),
   )
+  watch(
+  () => selectedCategory.value,
+  (newVal: string[]) => {
+    if (!newVal.length) {
+      filteredProducts.value = products.value;
+    } else {
+      filteredProducts.value = products.value.filter((product) =>
+        newVal.includes(product.category)
+      );
+    }
+  }
+);
 
   onMounted(() => {
     createProduct()
@@ -75,8 +80,7 @@
       <div class="flex justify-center space-x-1">
         <el-input v-model="filter.title" placeholder="Search" class="w-48" />
         <el-select multiple clearable v-model="selectedCategory" placeholder="Categories">
-          <el-option v-for="item in filter.categories" :key="item" :label="item" :value="item">
-          </el-option>
+          <el-option v-for="item in filter.categories" :key="item" :label="item" :value="item"/>
         </el-select>
       </div>
       <div>
@@ -97,7 +101,7 @@
     <el-dialog class="!w-[32rem]" title="Add product" v-model="dialogVisible">
       <Form class="space-y-3" v-slot="{ errors }">
         <Field
-          v-for="field in formFields"
+          v-for="field in productFormFields"
           :key="field.name"
           :name="field.name"
           :rules="field.rules"
