@@ -11,6 +11,7 @@ export function useProduct() {
     { name: 'category', rules: 'required', label: 'Category' },
     { name: 'year_of_production', rules: 'required|min:4', label: 'Year of production' },
     { name: 'price', rules: 'required|min:1', label: 'Price' },
+    {name: 'description', rules: '', label: 'Description'}
   ]
 
   function getRandomDate(start: Date, end: Date) {
@@ -42,6 +43,7 @@ export function useProduct() {
         name: faker.commerce.productName(),
         photo: faker.image.url(),
         model: faker.commerce.productName(),
+        description: faker.commerce.productDescription(),
         year_of_production: faker.number.int({ min: 2019, max: 2022 }),
         category: faker.commerce.department(),
         price: faker.number.int({ min: 99, max: 4999 }),

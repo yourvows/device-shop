@@ -4,6 +4,7 @@ declare interface IProduct {
   price: number
   photo: string
   model: string
+  description?: string
   year_of_production: number
   category: string
   added_date: string

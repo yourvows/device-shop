@@ -40,6 +40,11 @@
     }
   }
 
+  function deleteProduct(id: string) {
+    const index = products.value.findIndex((product) => product.id === id)
+    if (index !== -1) products.value.splice(index, 1)
+  }
+
   function hideProduct(id: string) {
     const product = products.value.find((product) => product.id === id)
     if (product) product.is_hidden = true
@@ -94,7 +99,8 @@
         v-for="product in filteredProducts"
         :key="product.id"
         @editProduct="editProduct"
-        @hide-product="hideProduct"
+        @hideProduct="hideProduct"
+        @deleteProduct="deleteProduct"
         :product
       />
     </div>
@@ -132,12 +138,9 @@
           <span class="text-red-600">{{ errors[field.name] }}</span>
         </Field>
         <el-button
-          @click="
-            addProduct(form, dialogType)
-            dialogVisible = false
-          "
-          >Add</el-button
-        >
+          @click="addProduct(form, dialogType); dialogVisible = false">
+          Add
+        </el-button>
       </Form>
     </el-dialog>
   </teleport>
