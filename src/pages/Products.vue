@@ -22,6 +22,7 @@
   const filter = ref({ title: '', categories: [] as string[] })
   const selectedCategory = ref<string[]>([])
   const filteredProducts = ref<IProduct[]>([])
+  const productForm = ref()
   const form = ref<IProductForm>({
     name: '',
     price: 0,
@@ -31,6 +32,11 @@
     added_date: '',
   })
 
+  function closeHandler(){
+    console.log(productForm.value)
+    dialogType.value = 'add'
+    productForm.value.resetForm()
+  }
   function editProduct(item: IProduct) {
     const product = products.value.find((product) => product.id === item.id)
     if (product) {
@@ -109,10 +115,10 @@
     <el-dialog
       class="!w-[32rem]"
       title="Add product"
-      @close="dialogType = 'add'"
+      @close="closeHandler"
       v-model="dialogVisible"
     >
-      <Form class="space-y-3" v-slot="{ errors }">
+      <Form ref="productForm" class="space-y-3" v-slot="{ errors }">
         <Field
           v-for="field in productFormFields"
           :key="field.name"
